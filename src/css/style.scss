@@ -1,0 +1,248 @@
+#switcher {
+  font-size: 10px;
+  top: 0;
+  left: 0;
+  display: block;
+  position: fixed;
+  //width: 80px;
+  padding: 10px;
+  background-color: #4d4d4d;
+  color: white;
+  & label {
+    display: inline-block;
+    padding: 5px 0;
+    margin-left: 15px;
+  }
+}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+
+$image-base: "http://unsplash.it/1680/1050/";
+
+$blur: 10px;
+$image-box-size: 260px;
+
+// (condition name, unsplash.it img #, accent color)
+$conditions: (
+  (thunderstorm,      '171',  #3B4950),
+  (drizzle,           '553',  #712E07),
+  (rain,              '178',  #87897C),
+  (snow,              '730',  #9CAAAF),
+  (atmosphere,        '227',  #597577),
+  (clear,             '792',  #235875),
+  (clouds,            '894',  #5F76A0),
+  (extreme,           '536',  #112628),
+  (additional,        '459',  #AA875B),
+);
+
+@mixin image-background($img) {
+  $img-url: "#{$image-base}?image=#{$img}";
+  background-image: url($img-url);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// Generate classes for each condistion to act as tests for the image to load.
+// These will be utilized by the jquery.waitforimages plugin to delay initializing
+// the css animation that places the weather condistions on the screen.
+@each $condition in $conditions {
+  .image-checker.#{nth($condition, 1)} {
+    @include image-background(nth($condition, 2));
+  }
+}
+
+body {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  font-family: 'Open Sans', arial, sans-serif;
+  padding: 1px;
+  min-height: 100vh;
+  height: 100%;
+  transition: all 1s ease-in-out;
+  background-color: #27587B;
+  &:before {
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: cover;
+    content: '';
+		padding: 0;
+		margin: 0;
+    position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		filter: blur($blur) opacity(0);
+		z-index: 0;
+    //opacity: 0;
+
+    transition: all 1s ease-in-out;
+    .initial &,
+    .unloaded & {
+      //opacity: 0;
+    }
+    .loaded & {
+      filter: blur($blur) opacity(1);
+    }
+	}
+  // loop through map to create styles for conditions
+  @each $condition in $conditions {
+    // Generates an .condition body {}  & .condition body:before () styles for
+    // each weather condition.
+    .#{nth($condition, 1)} & {
+      background-color: nth($condition, 3); // $sunny;
+      &:before {
+        @include image-background(nth($condition, 2));
+      }
+    }
+  } // end @each loop
+} // end body selector
+
+.weather {
+  padding-left: $image-box-size;
+  max-width: 350px;
+  height: 400px;
+  margin: 0 auto;
+  border-radius: 7px;
+  box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  position: relative;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  visibility: hidden;
+  .unloaded &,
+  .initial & {
+    visibility: hidden;
+  }
+  .loaded & {
+    visibility: visible;
+    animation-name: fadeInDown;
+  }
+  /* Rectangle 2: */
+  &__temp-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    height: 100%;
+    width: $image-box-size;
+    background-size: cover;
+    box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+    z-index: 100;
+  }
+  &__temp {
+    margin: 0;
+    padding: 1px;
+    font-weight: 300;
+    font-size: 80px;
+    line-height: 110px;
+    position: relative;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    .loaded & {
+      animation-delay: .3s;
+      animation-name: fadeIn;
+    }
+  }
+
+  &__temp-measure-indicator {
+    vertical-align: 29px;
+    font-size: 40px;
+  }
+
+  &__location {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    .loaded & {
+      animation-delay: .4s;
+      animation-name: fadeIn;
+    }
+  }
+  // loop through condition map elements to style box accordingly
+  @each $condition in $conditions {
+    .#{nth($condition, 1)} & {
+      background-color: transparentize(nth($condition, 3), .7);
+
+      &__temp-container {
+        background-color: nth($condition, 3);
+        @include image-background(nth($condition, 2));
+      }
+      &__detail {
+        color: white; //darken(nth($condition, 3), 12);
+        //text-shadow: 1px 1px 1px transparentize(darken(nth($condition, 3), 15), .22);
+        border-bottom: 1px solid transparentize(nth($condition, 3), .7);
+        &:last-of-type {
+          border-bottom: none;
+        }
+      }
+    }
+  } // end each
+
+  &__details-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+  }
+  &__detail {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
+    z-index: 50;
+    .loaded & {
+      animation-name: fadeInLeft;
+    }
+    $i: 1;
+    $delay: 0s;
+    @while $i < 5 {
+      .loaded &:nth-of-type(#{$i}) {
+        animation-delay: $delay;
+      }
+      $delay: $delay + .1s;
+      $i: $i + 1;
+    }
+    //color: white;
+    //text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
+  }
+
+
+
+  &__detail-icon {
+    font-size: 25px;
+    line-height: 25px;
+    padding: 17px 0 0 0;
+  }
+
+  &__detail-description {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0;
+  }
+} // end weather selector
+
+.image-checker {
+  position: fixed;
+  bottom: -10000px;
+  left: -10000px;
+  z-index: -100;
+  height: 100px;
+  width: 100px;
+}
+@media screen and (min-width: 760px) {
+  .weather {
+    margin-top: 150px;
+  }
+}

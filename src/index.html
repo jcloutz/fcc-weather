@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="initial">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.0/animate.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Codepen Offline</title>
+  </head>
+  <body>
+    <div id="switcher">
+      Select Weather Condition
+      <label for="none">
+        <input class="weather-toggle" type="radio" value="none" id="none" name="condition"> none
+      </label>
+      <label for="thunderstorm">
+        <input class="weather-toggle" type="radio" value="thunderstorm" id="thunderstorm" name="condition"> thunderstorm
+      </label>
+      <label for="drizzle">
+        <input class="weather-toggle" type="radio" value="drizzle" id="drizzle" name="condition"> drizzle
+      </label>
+      <label for="rain">
+        <input class="weather-toggle" type="radio" value="rain" id="rain" name="condition"> rain
+      </label>
+      <label for="snow">
+        <input class="weather-toggle" type="radio" value="snow" id="snow" name="condition"> snow
+      </label>
+      <label for="atmosphere">
+        <input class="weather-toggle" type="radio" value="atmosphere" id="atmosphere" name="condition"> atmosphere
+      </label>
+      <label for="clear">
+        <input class="weather-toggle" type="radio" value="clear" id="clear" name="condition"> clear
+      </label>
+      <label for="clouds">
+        <input class="weather-toggle" type="radio" value="clouds" id="clouds" name="condition"> clouds
+      </label>
+      <label for="extreme">
+        <input class="weather-toggle" type="radio" value="extreme" id="extreme" name="condition"> extreme
+      </label>
+      <label for="additional">
+        <input class="weather-toggle" type="radio" value="additional" id="additional" name="condition"> additional
+      </label>
+
+    </div>
+    <div id="content">
+      <div class="weather">
+        <div class="weather__temp-container">
+          <p class="weather__temp">77<i class="weather__temp-measure-indicator wi wi-fahrenheit"></i></p>
+          <p class="weather__location">Myrtle Beach, SC</p>
+        </div>
+        <div class="weather__details-container">
+          <div class="weather__detail">
+            <i class="weather__detail-icon wi wi-day-cloudy"></i>
+            <p class="weather__detail-description">Sunny</p>
+          </div>
+          <div class="weather__detail">
+            <i class="weather__detail-icon wi wi-wind-direction"></i>
+            <p class="weather__detail-description">23&deg; ENE</p>
+          </div>
+          <div class="weather__detail">
+            <i class="weather__detail-icon wi wi-humidity"></i>
+            <p class="weather__detail-description">100%</p>
+          </div>
+          <div class="weather__detail">
+            <i class="weather__detail-icon wi wi-barometer"></i>
+            <p class="weather__detail-description">1025 hPa</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="image-checker">
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vibrant.js/1.0.0/Vibrant.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.waitforimages/2.1.0/jquery.waitforimages.min.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

@@ -6,35 +6,35 @@ var data = {
   },
   "weather": [
     {
-      "id": 804,
-      "main": "Clouds",
-      "description": "overcast clouds",
-      "icon": "04n"
+      "id": 800,
+      "main": "Clear",
+      "description": "sky is clear",
+      "icon": "01d"
     }
   ],
   "base": "cmc stations",
   "main": {
-    "temp": 50.86,
-    "pressure": 1022,
-    "humidity": 62,
-    "temp_min": 48,
-    "temp_max": 55.99
+    "temp": 281.58,
+    "pressure": 1018,
+    "humidity": 42,
+    "temp_min": 280.15,
+    "temp_max": 284.26
   },
   "wind": {
-    "speed": 6.7,
+    "speed": 8.7,
     "deg": 360
   },
   "clouds": {
-    "all": 90
+    "all": 1
   },
-  "dt": 1451713157,
+  "dt": 1451930939,
   "sys": {
     "type": 1,
     "id": 2429,
-    "message": 0.0108,
+    "message": 0.0136,
     "country": "US",
-    "sunrise": 1451737246,
-    "sunset": 1451773142
+    "sunrise": 1451910067,
+    "sunset": 1451946061
   },
   "id": 4578904,
   "name": "Forestbrook",
@@ -52,6 +52,25 @@ var apiKey = '9eed8518c4e923f4c9d88217fe9c998b',
       "clouds": "http://unsplash.it/1680/1050/?image=894",
       "extreme": "http://unsplash.it/1680/1050/?image=536",
       "additional": "http://unsplash.it/1680/1050/?image=459"
+    },
+    windDirTranslations = {
+      '0': 'N',
+      '22.5': 'NNE',
+      '45': 'NE',
+      '67.5': 'ENE',
+      '90': 'E',
+      '112.5': 'ESE',
+      '135': 'SE',
+      '157.5': 'SSE',
+      '180': 'S',
+      '202.5': 'SSW',
+      '225': 'SW',
+      '247.5': 'WSW',
+      '270': 'W',
+      '292.5': 'WNW',
+      '315': 'NW',
+      '337.5': 'NNW',
+      '360': 'N',
     };
 
 $(document).ready(function() {
@@ -76,40 +95,88 @@ $(document).ready(function() {
     } else {
       $html.attr('class', 'unloaded');
     }
-
   });
 });
 
 var WeatherDetail = React.createClass({
   render: function() {
+    var icon = "weather__detail-icon wi " + this.props.icon;
     return (
       <div className="weather__detail">
-        <i className="weather__detail-icon wi wi-day-cloudy"></i>
-        <p className="weather__detail-description">Sunny</p>
-      </div>
-    );
-  }
-});
-
-var TemperatureContainer = React.createClass({
-  render: function() {
-    return(
-      <div className="weather__temp-container">
-        <p className="weather__temp">77<i className="weather__temp-measure-indicator wi wi-fahrenheit"></i></p>
-        <p className="weather__location">Myrtle Beach, SC</p>
+        <i className={icon}></i>
+        <p className="weather__detail-description">{this.props.value}</p>
       </div>
     );
   }
 });
 
 var WeatherDetailsContainer = React.createClass({
+  convertWindSpeed: function(windSpeed) {
+    var speed;
+    if (this.props.measurementSystem === "imperial") {
+      speed = Math.round(windSpeed * 2.2369362920544) + ' m/h';
+    } else {
+      speed = windSpeed + ' m/s'
+    }
+    return speed;
+  },
+  convertPressure: function(atmoPressure) {
+    var pressure;
+
+    if(this.props.measurementSystem === 'imperial') {
+      pressure = Math.round(atmoPressure * .030) + ' in';
+    } else {
+      pressure = atmoPressure + ' hPa';
+    }
+
+    return pressure;
+  },
+  getWind: function() {
+    var windSpeed = this.props.data.wind.speed;
+    var significance = 22.5;
+    var windDeg = Math.round(this.props.data.wind.deg / significance) * significance;
+    var windDir = windDirTranslations[windDeg.toString()];
+
+    return windDir + ' ' + this.convertWindSpeed(windSpeed);
+
+  },
   render: function() {
     return(
       <div className="weather__details-container">
-        <WeatherDetail />
-        <WeatherDetail />
-        <WeatherDetail />
-        <WeatherDetail />
+        <WeatherDetail icon={"wi-owm-" + this.props.data.weather[0].id} value={this.props.data.weather[0].main}/>
+        <WeatherDetail icon={"wi-wind-direction"} value={this.getWind()}/>
+        <WeatherDetail icon={'wi-humidity'} value={this.props.data.main.humidity + '%'}/>
+        <WeatherDetail icon={'wi-barometer'} value={this.convertPressure(this.props.data.main.pressure)}/>
+      </div>
+    );
+  }
+});
+
+var TemperatureContainer = React.createClass({
+  calculateTemp: function(kelvin) {
+    var temp;
+    if(this.props.measurementSystem === 'imperial') {
+      // return fahrenheit
+      temp = 9 / 5 * (kelvin - 273) + 32;
+    } else {
+      // return celcius
+      temp = kelvin - 273.15;
+    }
+    return Math.round(temp);
+  },
+  render: function() {
+    var temp = this.props.temp;
+    var loc = this.props.location;
+    var tempIndicatorClass = "weather__temp-measure-indicator wi ";
+    if (this.props.measurementSystem === 'imperial') {
+      tempIndicatorClass += 'wi-fahrenheit';
+    } else {
+      tempIndicatorClass += 'wi-celsius';
+    }
+    return(
+      <div className="weather__temp-container">
+        <p className="weather__temp">{this.calculateTemp(this.props.temp)}<i className={tempIndicatorClass}></i></p>
+        <p className="weather__location">{this.props.location}</p>
       </div>
     );
   }
@@ -117,7 +184,11 @@ var WeatherDetailsContainer = React.createClass({
 
 var Weather = React.createClass({
   getInitialState: function() {
-    return {geo: false, data: []};
+    return {
+      geo: false,
+      measurementSystem: 'imperial',
+      data: []
+    };
   },
   loadWeather: function(lat, long) {
     this.setState({geo: true, data: data});
@@ -151,8 +222,8 @@ var Weather = React.createClass({
     if(this.state.geo !== false) {
       return (
         <div className="weather">
-          <TemperatureContainer />
-          <WeatherDetailsContainer />
+          <TemperatureContainer temp={this.state.data.main.temp} location={this.state.data.name} measurementSystem={this.state.measurementSystem} />
+          <WeatherDetailsContainer data={this.state.data} measurementSystem={this.state.measurementSystem}/>
         </div>
       );
     } else {

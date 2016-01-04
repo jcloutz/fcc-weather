@@ -20,6 +20,7 @@ $image-base: "http://unsplash.it/1680/1050/";
 
 $blur: 10px;
 $image-box-size: 260px;
+$border-radius: 7px;
 
 // (condition name, unsplash.it img #, accent color)
 $conditions: (
@@ -105,11 +106,11 @@ body {
   max-width: 350px;
   height: 400px;
   margin: 0 auto;
-  border-radius: 7px;
-  box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  // border-radius: 7px;
+  // box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
+  // overflow: hidden;
   position: relative;
-  animation-duration: 1s;
+  animation-duration: 1.2s;
   animation-fill-mode: both;
   visibility: hidden;
   .unloaded &,
@@ -129,10 +130,14 @@ body {
     height: 100%;
     width: $image-box-size;
     background-size: cover;
-    box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
+    // box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
     z-index: 100;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    overflow: hidden;
   }
   &__temp {
     margin: 0;
@@ -168,18 +173,22 @@ body {
   // loop through condition map elements to style box accordingly
   @each $condition in $conditions {
     .#{nth($condition, 1)} & {
-      background-color: transparentize(nth($condition, 3), .7);
-
       &__temp-container {
         background-color: nth($condition, 3);
         @include image-background(nth($condition, 2));
       }
       &__detail {
-        color: white; //darken(nth($condition, 3), 12);
-        //text-shadow: 1px 1px 1px transparentize(darken(nth($condition, 3), 15), .22);
-        border-bottom: 1px solid transparentize(nth($condition, 3), .7);
-        &:last-of-type {
-          border-bottom: none;
+        color: white;
+        // background-color: transparentize(nth($condition, 3), .7);
+
+        $i: 1;
+        $c: 0;
+        @while $i < 5 {
+          &:nth-of-type(#{$i}) {
+            background-color: transparentize(lighten(nth($condition, 3), $i + $c), .2);
+          }
+          $c: $c + 8;
+          $i: $i + 1;
         }
       }
     }
@@ -189,8 +198,8 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    // background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
   }
   &__detail {
@@ -202,20 +211,28 @@ body {
     animation-fill-mode: both;
     animation-timing-function: ease-in-out;
     z-index: 50;
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
     .loaded & {
       animation-name: fadeInLeft;
+    }
+    &:first-of-type {
+      border-top-right-radius: $border-radius;
+    }
+    &:last-of-type {
+      border-bottom-right-radius: $border-radius;
     }
     $i: 1;
     $delay: 0s;
     @while $i < 5 {
       .loaded &:nth-of-type(#{$i}) {
         animation-delay: $delay;
+        z-index: 100-$i;
       }
       $delay: $delay + .1s;
       $i: $i + 1;
     }
     //color: white;
-    //text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
   }
 
 

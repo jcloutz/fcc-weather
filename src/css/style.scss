@@ -3,7 +3,8 @@
 $image-base: "http://unsplash.it/1680/1050/";
 
 $blur: 10px;
-$image-box-size: 260px;
+$mobile-image-box-size: 220px;
+$desktop-image-box-size: 260px;
 $border-radius: 7px;
 
 // (condition name, unsplash.it img #, accent color)
@@ -37,18 +38,6 @@ $conditions: (
   }
 }
 
-// body {
-//   background-size: cover;
-//   background-repeat: no-repeat;
-//   background-position: center center;
-//   font-family: 'Open Sans', arial, sans-serif;
-//   padding: 1px;
-//   min-height: 100vh;
-//   height: 100%;
-//   transition: all 1s ease-in-out;
-//   background-color: #27587B;
-// } // end body selector
-
 #content {
   background-size: cover;
   background-repeat: no-repeat;
@@ -59,6 +48,7 @@ $conditions: (
   height: 100%;
   transition: all 1s ease-in-out;
   background-color: #27587B;
+  padding: 10px;
   &:before {
 		background-repeat: no-repeat;
 		background-position: center center;
@@ -85,7 +75,7 @@ $conditions: (
   }
   // loop through map to create styles for conditions
   @each $condition in $conditions {
-    // Generates an .condition body {}  & .condition body:before () styles for
+    // Generates #content.condition{}  & #content.condition:before () styles for
     // each weather condition.
     &.#{nth($condition, 1)} {
       background-color: nth($condition, 3); // $sunny;
@@ -96,7 +86,7 @@ $conditions: (
   } // end @each loop
 }
 .weather {
-  padding-left: $image-box-size;
+  padding-left: $mobile-image-box-size;
   max-width: 350px;
   height: 400px;
   margin: 0 auto;
@@ -123,7 +113,7 @@ $conditions: (
     left: 0;
     padding: 10px;
     height: 100%;
-    width: $image-box-size;
+    width: $mobile-image-box-size;
     background-size: cover;
     // box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
     box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
@@ -342,8 +332,16 @@ $conditions: (
   font-weight: 300;
   text-shadow: 1px 1px 2px black;
 }
-@media screen and (min-width: 760px) {
+@media screen and (min-width: 350px) {
+  #content {
+    padding: 1px;
+  }
   .weather {
-    margin-top: 150px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: $desktop-image-box-size;
+    &__temp-container {
+      width: $desktop-image-box-size;
+    }
   }
 }

@@ -1,46 +1,5 @@
-//"use strict";
+"use strict";
 
-var data = {
-  "coord": {
-    "lon": -78.96,
-    "lat": 33.72
-  },
-  "weather": [
-    {
-      "id": 800,
-      "main": "Clear",
-      "description": "sky is clear",
-      "icon": "01d"
-    }
-  ],
-  "base": "cmc stations",
-  "main": {
-    "temp": 281.58,
-    "pressure": 1018,
-    "humidity": 42,
-    "temp_min": 280.15,
-    "temp_max": 284.26
-  },
-  "wind": {
-    "speed": 8.7,
-    "deg": 360
-  },
-  "clouds": {
-    "all": 1
-  },
-  "dt": 1451930939,
-  "sys": {
-    "type": 1,
-    "id": 2429,
-    "message": 0.0136,
-    "country": "US",
-    "sunrise": 1451910067,
-    "sunset": 1451946061
-  },
-  "id": 4578904,
-  "name": "Forestbrook",
-  "cod": 200
-};
 var apiKey = '9eed8518c4e923f4c9d88217fe9c998b',
     apiUrl = 'http://api.openweathermap.org/data/2.5/weather?appid='+ apiKey,
     conditions = {
@@ -247,8 +206,6 @@ var Weather = React.createClass({
     }
   },
   loadWeather: function(lat, long) {
-
-
     var url = this.props.api
       +'&lat='+lat
       +'&lon='+long;

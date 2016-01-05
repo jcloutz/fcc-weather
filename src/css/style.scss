@@ -1,19 +1,3 @@
-#switcher {
-  font-size: 10px;
-  top: 0;
-  left: 0;
-  display: block;
-  position: fixed;
-  //width: 80px;
-  padding: 10px;
-  background-color: #4d4d4d;
-  color: white;
-  & label {
-    display: inline-block;
-    padding: 5px 0;
-    margin-left: 15px;
-  }
-}
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
 $image-base: "http://unsplash.it/1680/1050/";
@@ -53,7 +37,19 @@ $conditions: (
   }
 }
 
-body {
+// body {
+//   background-size: cover;
+//   background-repeat: no-repeat;
+//   background-position: center center;
+//   font-family: 'Open Sans', arial, sans-serif;
+//   padding: 1px;
+//   min-height: 100vh;
+//   height: 100%;
+//   transition: all 1s ease-in-out;
+//   background-color: #27587B;
+// } // end body selector
+
+#content {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -78,29 +74,27 @@ body {
 		filter: blur($blur) opacity(0);
 		z-index: 0;
     //opacity: 0;
-
     transition: all 1s ease-in-out;
-    .initial &,
-    .unloaded & {
-      //opacity: 0;
-    }
-    .loaded & {
-      filter: blur($blur) opacity(1);
-    }
 	}
+  &.initial:before,
+  &.unloaded:before {
+    //opacity: 0;
+  }
+  &.loaded:before {
+    filter: blur($blur) opacity(1);
+  }
   // loop through map to create styles for conditions
   @each $condition in $conditions {
     // Generates an .condition body {}  & .condition body:before () styles for
     // each weather condition.
-    .#{nth($condition, 1)} & {
+    &.#{nth($condition, 1)} {
       background-color: nth($condition, 3); // $sunny;
       &:before {
         @include image-background(nth($condition, 2));
       }
     }
   } // end @each loop
-} // end body selector
-
+}
 .weather {
   padding-left: $image-box-size;
   max-width: 350px;
@@ -110,6 +104,7 @@ body {
   // box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
   // overflow: hidden;
   position: relative;
+  animation-delay: 1.2s;
   animation-duration: 1.2s;
   animation-fill-mode: both;
   visibility: hidden;
@@ -149,7 +144,7 @@ body {
     animation-duration: 1s;
     animation-fill-mode: both;
     .loaded & {
-      animation-delay: .3s;
+      animation-delay: 1.2s;
       animation-name: fadeIn;
     }
   }
@@ -222,7 +217,7 @@ body {
       border-bottom-right-radius: $border-radius;
     }
     $i: 1;
-    $delay: 0s;
+    $delay: 1.2s;
     @while $i < 5 {
       .loaded &:nth-of-type(#{$i}) {
         animation-delay: $delay;
@@ -242,7 +237,7 @@ body {
   &__detail-description {
     font-size: 12px;
     font-weight: 700;
-    margin: 0;
+    margin: 10px 0 0 0;
   }
 
   &__type-toggle-container {
@@ -319,13 +314,33 @@ body {
 
 } // end weather selector
 
-.image-checker {
-  position: fixed;
-  bottom: -10000px;
-  left: -10000px;
-  z-index: -100;
-  height: 100px;
-  width: 100px;
+@keyframes spin {
+  0%   {
+		transform: rotate(0deg)
+	}
+  100% {
+		transform: rotate(360deg)
+	}
+}
+.loading-icon {
+	width: 40px;
+	animation       : spin 2s infinite linear;
+  transform-origin: center center;
+	path {
+		fill: white;
+	}
+}
+
+.message {
+  margin: 0 auto;
+  max-width: 300px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  font-size: 25px;
+  font-weight: 300;
+  text-shadow: 1px 1px 2px black;
 }
 @media screen and (min-width: 760px) {
   .weather {

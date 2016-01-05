@@ -234,20 +234,89 @@ body {
     //color: white;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
   }
-
-
-
   &__detail-icon {
     font-size: 25px;
     line-height: 25px;
     padding: 17px 0 0 0;
   }
-
   &__detail-description {
     font-size: 12px;
     font-weight: 700;
     margin: 0;
   }
+
+  &__type-toggle-container {
+    width: 60px;
+    height: 52px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 10px;
+  }
+  &__type-toggle {
+    display: block;
+    position: relative;
+    width: 60px;;
+    height: 52px;
+    &:before,
+    &:after {
+      position: absolute;
+      font-size: 11px;
+      left: 0;
+      text-align: center;
+      font-weight: 400;
+      display: block;
+      width: 60px;;
+      height: 26px;
+      line-height: 25px;
+      z-index: 150;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32)
+    }
+
+    &:before {
+      content: 'Metric';
+      top: 0;
+    }
+    &:after {
+      content: 'Imperial';
+      bottom: 0;
+    }
+  }
+  &__type-toggle-label {
+    display: block;
+    position: absolute;
+    width: 54px;
+    height: 24px;
+    left: 3px;
+    top: 3px;
+    z-index: 200;
+    transition: all .3s ease-in-out;
+    border-radius: 8px;
+  }
+  &__type-toggle-input {
+    display: none;
+    &:checked + label {
+      top: 25px;
+    }
+  }
+
+  // loop through conditions and create color schemes for the
+  // toggle based on the selected weather
+  @each $condition in $conditions {
+    .#{nth($condition, 1)} &__type-toggle-container {
+      background-color: transparentize(lighten(nth($condition, 3), 10), .25);
+    }
+    .#{nth($condition, 1)} &__type-toggle:after,
+    .#{nth($condition, 1)} &__type-toggle:before {
+
+    }
+
+    .#{nth($condition, 1)} &__type-toggle-label {
+      background-color: nth($condition, 3);
+    }
+
+  }
+
 } // end weather selector
 
 .image-checker {

@@ -152,6 +152,27 @@ var WeatherDetailsContainer = React.createClass({
   }
 });
 
+var TemperatureToggle = React.createClass({
+  getInitialState: function() {
+    return {measurementSystem: 'imperial'};
+  },
+  handleMeasurementSystemChange: function() {
+    var newState = this.state.measurementSystem === 'imperial' ? 'metric' : 'imperial';
+    this.setState({measurementSystem: newState})
+    this.props.onMeasurementSystemChange(newState);
+  },
+  render: function() {
+    return (
+      <div className="weather__type-toggle-container">
+        <div className="weather__type-toggle">
+          <input type="checkbox" id="metric-toggle" name="metric-toggle" onChange={this.handleMeasurementSystemChange} className="weather__type-toggle-input" />
+          <label htmlFor="metric-toggle" className="weather__type-toggle-label"></label>
+        </div>
+      </div>
+    );
+  }
+});
+
 var TemperatureContainer = React.createClass({
   calculateTemp: function(kelvin) {
     var temp;
@@ -177,6 +198,7 @@ var TemperatureContainer = React.createClass({
       <div className="weather__temp-container">
         <p className="weather__temp">{this.calculateTemp(this.props.temp)}<i className={tempIndicatorClass}></i></p>
         <p className="weather__location">{this.props.location}</p>
+        <TemperatureToggle measurementSystem={this.props.measurementSystem} onMeasurementSystemChange={this.props.onMeasurementSystemChange} />
       </div>
     );
   }
@@ -190,8 +212,16 @@ var Weather = React.createClass({
       data: []
     };
   },
+  handleMeasurementSystemChange: function(system) {
+    this.setState({measurementSystem: system});
+  },
   loadWeather: function(lat, long) {
     this.setState({geo: true, data: data});
+
+    // var url = this.props.api
+    //   +'&lat='+lat
+    //   +'&lon='+long;
+    //
     // $.ajax({
     //   url: url,
     //   dataType: 'json',
@@ -222,8 +252,14 @@ var Weather = React.createClass({
     if(this.state.geo !== false) {
       return (
         <div className="weather">
-          <TemperatureContainer temp={this.state.data.main.temp} location={this.state.data.name} measurementSystem={this.state.measurementSystem} />
-          <WeatherDetailsContainer data={this.state.data} measurementSystem={this.state.measurementSystem}/>
+          <TemperatureContainer
+              temp={this.state.data.main.temp}
+              location={this.state.data.name}
+              measurementSystem={this.state.measurementSystem}
+              onMeasurementSystemChange={this.handleMeasurementSystemChange} />
+          <WeatherDetailsContainer
+              data={this.state.data}
+              measurementSystem={this.state.measurementSystem}  />
         </div>
       );
     } else {

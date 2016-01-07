@@ -3,15 +3,15 @@
 var apiKey = '9eed8518c4e923f4c9d88217fe9c998b',
     apiUrl = 'http://api.openweathermap.org/data/2.5/weather?appid='+ apiKey,
     conditions = {
-      "thunderstorm": "http://unsplash.it/1680/1050/?image=171",
-      "drizzle": "http://unsplash.it/1680/1050/?image=553",
-      "rain": "http://unsplash.it/1680/1050/?image=178",
-      "snow": "http://unsplash.it/1680/1050/?image=730",
-      "atmosphere": "http://unsplash.it/1680/1050/?image=227",
-      "clear": "http://unsplash.it/1680/1050/?image=792",
-      "clouds": "http://unsplash.it/1680/1050/?image=894",
-      "extreme": "http://unsplash.it/1680/1050/?image=536",
-      "additional": "http://unsplash.it/1680/1050/?image=459"
+      "thunderstorm":     "http://unsplash.it/1680/1050/?image=171",
+      "drizzle":          "http://unsplash.it/1680/1050/?image=553",
+      "rain":             "http://unsplash.it/1680/1050/?image=178",
+      "snow":             "http://unsplash.it/1680/1050/?image=730",
+      "atmosphere":       "http://unsplash.it/1680/1050/?image=227",
+      "clear":            "http://unsplash.it/1680/1050/?image=792",
+      "clouds":           "http://unsplash.it/1680/1050/?image=894",
+      "extreme":          "http://unsplash.it/1680/1050/?image=536",
+      "additional":       "http://unsplash.it/1680/1050/?image=459"
     },
     conditionCodes = [
       {
@@ -186,17 +186,69 @@ var TemperatureContainer = React.createClass({
   }
 });
 
+var WeatherForm = React.createClass({
+  getInitialState: function() {
+    return {
+      location: this.props.location,
+    };
+  },
+  handleLocationChange: function(e) {
+    this.setState({location: e.target.value})
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+
+    var location = this.state.location.trim();
+    if(!location) {
+      return;
+    }
+
+    this.props.onLocationSubmit(location);
+  },
+  render: function() {
+    return (
+      <form className="weather__form" onSubmit={this.handleSubmit}>
+        <input type="text"
+          value={this.state.location}
+          placeholder="London, UK or 90210, US"
+          onChange={this.handleLocationChange}
+          className="weather__form-input" />
+        <button value="submit" className="weather__form-submit"><i className="wi wi-cloud-up"></i></button>
+      </form>
+    );
+  }
+});
+
 var Weather = React.createClass({
   getInitialState: function() {
     return {
       status: 'loading',
       geo: false,
       measurementSystem: 'imperial',
-      data: []
+      data: [],
+      searchLocation: '',
     };
   },
   handleMeasurementSystemChange: function(system) {
     this.setState({measurementSystem: system});
+  },
+  handleFormSubmit: function(location) {
+    this.setState({status: 'loading', searchLocation: location});
+
+    var url = this.props.api;
+    location = location.replace(' ', '');
+    var regexS = /[\d]{2,}/g; // look for numeric postalcode
+    var regex = new RegExp(regexS);
+    var result = regex.exec(location);
+
+    if(result == null) { // city search
+      url += '&q='+location;
+
+    } else { //zipcode search
+      url += '&zip='+location;
+    }
+
+    this.loadWeather(url);
   },
   resolveConditionCode: function(code) {
     for (var i = 0; i < conditionCodes.length; i++) {
@@ -205,38 +257,43 @@ var Weather = React.createClass({
       }
     }
   },
-  loadWeather: function(lat, long) {
-    var url = this.props.api
-      +'&lat='+lat
-      +'&lon='+long;
-
+  ajaxError: function(xhr, status, err) {
+    this.setState({status: 'error', error: err.toString()});
+  },
+  loadWeather: function(url) {
     $.ajax({
       url: url,
       dataType: 'json',
       cache: false,
-      success: (data) => {
-        this.setState({status: 'loaded', data: data});
-        var $node = $(this.refs.weatherContainer.parentNode);
-        var condition = this.resolveConditionCode(this.state.data.weather[0].id);
+      success: (data, status, xhr) => {
+        console.log('data', data);
+        if(data.cod === '404') {
+          this.ajaxError(xhr, status, "Location not found.");
+        } else {
+          this.setState({status: 'loaded', data: data});
+          var $node = $(this.refs.weatherContainer.parentNode);
+          var condition = this.resolveConditionCode(this.state.data.weather[0].id);
 
-        $node.attr('class', condition).waitForImages({
-          finished: function() {
-            $node.addClass('loaded');
-          },
-          waitForAll: true,
-        });
+          $node.attr('class', condition).waitForImages({
+            finished: function() {
+              $node.addClass('loaded');
+            },
+            waitForAll: true,
+          });
+        }
+
       },
-      error: (xhr, status, err) => {
-        this.setState({status: 'error'});
-        console.error(this.props.api, status, err.toString());
-      }
+      error: this.ajaxError,
 
     });
   },
   componentDidMount: function() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.loadWeather(position.coords.latitude, position.coords.longitude);
+        var url = this.props.api
+          +'&lat='+position.coords.latitude
+          +'&lon='+position.coords.longitude;
+        this.loadWeather(url);
       }, () => {
         this.setState({status: 'error'});
         console.log('error', 'Unable to retrieve location');
@@ -251,7 +308,7 @@ var Weather = React.createClass({
         <div className="weather" ref="weatherContainer">
           <TemperatureContainer
               temp={this.state.data.main.temp}
-              location={this.state.data.name}
+              location={this.state.data.name + ', ' + this.state.data.sys.country}
               measurementSystem={this.state.measurementSystem}
               onMeasurementSystemChange={this.handleMeasurementSystemChange} />
           <WeatherDetailsContainer
@@ -272,7 +329,11 @@ var Weather = React.createClass({
     } else {
       return (
         <div className="message error">
-          <p>Your browser does not support geolocation</p>
+          <h3>Whoops!</h3>
+          <p>It looks like we we have misplaced you, Sorry! :(</p>
+          <p className="message__instructions">Enter you current city or postal code, followed by the country abbreviation and we'll see if we can find you again!</p>
+          <WeatherForm onLocationSubmit={this.handleFormSubmit} location={this.state.searchLocation}/>
+          <p className="message__error">{this.state.error}</p>
         </div>
       );
     }

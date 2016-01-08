@@ -1,12 +1,8 @@
 {
-  "name": "codepen-offline",
+  "name": "weather-app-fcc",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "description": "Weather App solution for Free Code Camp Zipline.",
+  "author": "Jeremy Cloutier",
   "license": "ISC",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",

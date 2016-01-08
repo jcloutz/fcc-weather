@@ -1,25 +1,11 @@
-#switcher {
-  font-size: 10px;
-  top: 0;
-  left: 0;
-  display: block;
-  position: fixed;
-  //width: 80px;
-  padding: 10px;
-  background-color: #4d4d4d;
-  color: white;
-  & label {
-    display: inline-block;
-    padding: 5px 0;
-    margin-left: 15px;
-  }
-}
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
 $image-base: "http://unsplash.it/1680/1050/";
 
 $blur: 10px;
-$image-box-size: 260px;
+$mobile-image-box-size: 220px;
+$desktop-image-box-size: 260px;
+$border-radius: 7px;
 
 // (condition name, unsplash.it img #, accent color)
 $conditions: (
@@ -52,7 +38,7 @@ $conditions: (
   }
 }
 
-body {
+#content {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -62,6 +48,7 @@ body {
   height: 100%;
   transition: all 1s ease-in-out;
   background-color: #27587B;
+  padding: 10px;
   &:before {
 		background-repeat: no-repeat;
 		background-position: center center;
@@ -77,39 +64,38 @@ body {
 		filter: blur($blur) opacity(0);
 		z-index: 0;
     //opacity: 0;
-
     transition: all 1s ease-in-out;
-    .initial &,
-    .unloaded & {
-      //opacity: 0;
-    }
-    .loaded & {
-      filter: blur($blur) opacity(1);
-    }
 	}
+  &.initial:before,
+  &.unloaded:before {
+    //opacity: 0;
+  }
+  &.loaded:before {
+    filter: blur($blur) opacity(1);
+  }
   // loop through map to create styles for conditions
   @each $condition in $conditions {
-    // Generates an .condition body {}  & .condition body:before () styles for
+    // Generates #content.condition{}  & #content.condition:before () styles for
     // each weather condition.
-    .#{nth($condition, 1)} & {
+    &.#{nth($condition, 1)} {
       background-color: nth($condition, 3); // $sunny;
       &:before {
         @include image-background(nth($condition, 2));
       }
     }
   } // end @each loop
-} // end body selector
-
+}
 .weather {
-  padding-left: $image-box-size;
+  padding-left: $mobile-image-box-size;
   max-width: 350px;
   height: 400px;
   margin: 0 auto;
-  border-radius: 7px;
-  box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  // border-radius: 7px;
+  // box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
+  // overflow: hidden;
   position: relative;
-  animation-duration: 1s;
+  animation-delay: 1.2s;
+  animation-duration: 1.2s;
   animation-fill-mode: both;
   visibility: hidden;
   .unloaded &,
@@ -127,12 +113,16 @@ body {
     left: 0;
     padding: 10px;
     height: 100%;
-    width: $image-box-size;
+    width: $mobile-image-box-size;
     background-size: cover;
-    box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
+    // box-shadow: 4px 0 14px rgba(0, 0, 0, 0.4);
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
     z-index: 100;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    overflow: hidden;
   }
   &__temp {
     margin: 0;
@@ -144,7 +134,7 @@ body {
     animation-duration: 1s;
     animation-fill-mode: both;
     .loaded & {
-      animation-delay: .3s;
+      animation-delay: 1.2s;
       animation-name: fadeIn;
     }
   }
@@ -168,18 +158,22 @@ body {
   // loop through condition map elements to style box accordingly
   @each $condition in $conditions {
     .#{nth($condition, 1)} & {
-      background-color: transparentize(nth($condition, 3), .7);
-
       &__temp-container {
         background-color: nth($condition, 3);
         @include image-background(nth($condition, 2));
       }
       &__detail {
-        color: white; //darken(nth($condition, 3), 12);
-        //text-shadow: 1px 1px 1px transparentize(darken(nth($condition, 3), 15), .22);
-        border-bottom: 1px solid transparentize(nth($condition, 3), .7);
-        &:last-of-type {
-          border-bottom: none;
+        color: white;
+        // background-color: transparentize(nth($condition, 3), .7);
+
+        $i: 1;
+        $c: 0;
+        @while $i < 5 {
+          &:nth-of-type(#{$i}) {
+            background-color: transparentize(lighten(nth($condition, 3), $i + $c), .2);
+          }
+          $c: $c + 8;
+          $i: $i + 1;
         }
       }
     }
@@ -189,8 +183,8 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    // background: linear-gradient(135deg, rgba(255,255,255,0) 0%,rgba(255,255,255,.7) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
   }
   &__detail {
@@ -202,47 +196,193 @@ body {
     animation-fill-mode: both;
     animation-timing-function: ease-in-out;
     z-index: 50;
+    box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
     .loaded & {
       animation-name: fadeInLeft;
     }
+    &:first-of-type {
+      border-top-right-radius: $border-radius;
+    }
+    &:last-of-type {
+      border-bottom-right-radius: $border-radius;
+    }
     $i: 1;
-    $delay: 0s;
+    $delay: 1.2s;
     @while $i < 5 {
       .loaded &:nth-of-type(#{$i}) {
         animation-delay: $delay;
+        z-index: 100-$i;
       }
       $delay: $delay + .1s;
       $i: $i + 1;
     }
     //color: white;
-    //text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
   }
-
-
-
   &__detail-icon {
     font-size: 25px;
     line-height: 25px;
     padding: 17px 0 0 0;
   }
-
   &__detail-description {
     font-size: 12px;
     font-weight: 700;
-    margin: 0;
+    margin: 10px 0 0 0;
   }
+
+  &__type-toggle-container {
+    width: 60px;
+    height: 52px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 10px;
+  }
+  &__type-toggle {
+    display: block;
+    position: relative;
+    width: 60px;;
+    height: 52px;
+    &:before,
+    &:after {
+      position: absolute;
+      font-size: 11px;
+      left: 0;
+      text-align: center;
+      font-weight: 400;
+      display: block;
+      width: 60px;;
+      height: 26px;
+      line-height: 25px;
+      z-index: 150;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32)
+    }
+
+    &:before {
+      content: 'Metric';
+      top: 0;
+    }
+    &:after {
+      content: 'Imperial';
+      bottom: 0;
+    }
+  }
+  &__type-toggle-label {
+    display: block;
+    position: absolute;
+    width: 54px;
+    height: 24px;
+    left: 3px;
+    top: 3px;
+    z-index: 200;
+    transition: all .3s ease-in-out;
+    border-radius: 8px;
+  }
+  &__type-toggle-input {
+    display: none;
+    &:checked + label {
+      top: 25px;
+    }
+  }
+
+  // loop through conditions and create color schemes for the
+  // toggle based on the selected weather
+  @each $condition in $conditions {
+    .#{nth($condition, 1)} &__type-toggle-container {
+      background-color: transparentize(lighten(nth($condition, 3), 10), .25);
+    }
+    .#{nth($condition, 1)} &__type-toggle:after,
+    .#{nth($condition, 1)} &__type-toggle:before {
+
+    }
+
+    .#{nth($condition, 1)} &__type-toggle-label {
+      background-color: nth($condition, 3);
+    }
+
+  }
+
+  &__form {
+    position: relative;
+    font-size: 15px;
+    background-color: rgba(0, 0, 0, 0.29);
+    border-radius: 5px;
+  }
+  &__form-input {
+    border: none;
+    color: white;
+    padding: 10px 5px 10px 10px;
+    display: block;
+    background-color: transparent;
+    margin-right: 90px;
+    width: 100%;
+  }
+  &__form-submit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+  }
+
 } // end weather selector
 
-.image-checker {
-  position: fixed;
-  bottom: -10000px;
-  left: -10000px;
-  z-index: -100;
-  height: 100px;
-  width: 100px;
+@keyframes spin {
+  0%   {
+		transform: rotate(0deg)
+	}
+  100% {
+		transform: rotate(360deg)
+	}
 }
-@media screen and (min-width: 760px) {
+.loading-icon {
+	width: 40px;
+	animation       : spin 2s infinite linear;
+  transform-origin: center center;
+	path {
+		fill: white;
+	}
+}
+
+.message {
+  margin: 0 auto;
+  max-width: 300px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  font-size: 25px;
+  font-weight: 300;
+  text-shadow: 1px 1px 2px black;
+  position: relative;
+  z-index: 10;
+
+  &__error {
+    font-size: 13px;
+    color: #D86161;
+    text-shadow: none;
+    margin: 5px 0;
+    font-weight: 700;
+  }
+  &__instructions {
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+@media screen and (min-width: 350px) {
+  #content {
+    padding: 1px;
+  }
   .weather {
-    margin-top: 150px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: $desktop-image-box-size;
+    &__temp-container {
+      width: $desktop-image-box-size;
+    }
   }
 }

@@ -330,7 +330,7 @@ var Weather = React.createClass({
       return (
         <div className="message error">
           <h3>Whoops!</h3>
-          <p>It looks like we we have misplaced you, Sorry! :(</p>
+          <p>It looks like we misplaced you, Sorry! :(</p>
           <p className="message__instructions">Enter you current city or postal code, followed by the country abbreviation and we'll see if we can find you again!</p>
           <WeatherForm onLocationSubmit={this.handleFormSubmit} location={this.state.searchLocation}/>
           <p className="message__error">{this.state.error}</p>

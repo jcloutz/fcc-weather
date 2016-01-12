@@ -236,7 +236,6 @@ var Weather = React.createClass({
     this.setState({status: 'loading', searchLocation: location});
 
     var url = this.props.api;
-    location = location.replace(' ', '');
     var regexS = /[\d]{2,}/g; // look for numeric postalcode
     var regex = new RegExp(regexS);
     var result = regex.exec(location);

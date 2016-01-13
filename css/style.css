@@ -1,0 +1,914 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+/* line 28, stdin */
+* {
+  box-sizing: border-box;
+}
+
+/* line 36, stdin */
+.image-checker.thunderstorm {
+  background-image: url("http://unsplash.it/1680/1050/?image=171");
+}
+
+/* line 36, stdin */
+.image-checker.drizzle {
+  background-image: url("http://unsplash.it/1680/1050/?image=553");
+}
+
+/* line 36, stdin */
+.image-checker.rain {
+  background-image: url("http://unsplash.it/1680/1050/?image=178");
+}
+
+/* line 36, stdin */
+.image-checker.snow {
+  background-image: url("http://unsplash.it/1680/1050/?image=730");
+}
+
+/* line 36, stdin */
+.image-checker.atmosphere {
+  background-image: url("http://unsplash.it/1680/1050/?image=227");
+}
+
+/* line 36, stdin */
+.image-checker.clear {
+  background-image: url("http://unsplash.it/1680/1050/?image=792");
+}
+
+/* line 36, stdin */
+.image-checker.clouds {
+  background-image: url("http://unsplash.it/1680/1050/?image=894");
+}
+
+/* line 36, stdin */
+.image-checker.extreme {
+  background-image: url("http://unsplash.it/1680/1050/?image=536");
+}
+
+/* line 36, stdin */
+.image-checker.additional {
+  background-image: url("http://unsplash.it/1680/1050/?image=459");
+}
+
+/* line 41, stdin */
+#content {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  font-family: 'Open Sans', arial, sans-serif;
+  padding: 1px;
+  min-height: 100vh;
+  height: 100%;
+  transition: all 1s ease-in-out;
+  background-color: #27587B;
+  padding: 10px;
+}
+
+/* line 52, stdin */
+#content:before {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  content: '';
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-filter: blur(10px) opacity(0);
+          filter: blur(10px) opacity(0);
+  z-index: 0;
+  transition: all 1s ease-in-out;
+}
+
+/* line 73, stdin */
+#content.loaded:before {
+  -webkit-filter: blur(10px) opacity(1);
+          filter: blur(10px) opacity(1);
+}
+
+/* line 80, stdin */
+#content.thunderstorm {
+  background-color: #3B4950;
+}
+
+/* line 82, stdin */
+#content.thunderstorm:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=171");
+}
+
+/* line 80, stdin */
+#content.drizzle {
+  background-color: #712E07;
+}
+
+/* line 82, stdin */
+#content.drizzle:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=553");
+}
+
+/* line 80, stdin */
+#content.rain {
+  background-color: #87897C;
+}
+
+/* line 82, stdin */
+#content.rain:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=178");
+}
+
+/* line 80, stdin */
+#content.snow {
+  background-color: #9CAAAF;
+}
+
+/* line 82, stdin */
+#content.snow:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=730");
+}
+
+/* line 80, stdin */
+#content.atmosphere {
+  background-color: #597577;
+}
+
+/* line 82, stdin */
+#content.atmosphere:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=227");
+}
+
+/* line 80, stdin */
+#content.clear {
+  background-color: #235875;
+}
+
+/* line 82, stdin */
+#content.clear:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=792");
+}
+
+/* line 80, stdin */
+#content.clouds {
+  background-color: #5F76A0;
+}
+
+/* line 82, stdin */
+#content.clouds:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=894");
+}
+
+/* line 80, stdin */
+#content.extreme {
+  background-color: #112628;
+}
+
+/* line 82, stdin */
+#content.extreme:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=536");
+}
+
+/* line 80, stdin */
+#content.additional {
+  background-color: #AA875B;
+}
+
+/* line 82, stdin */
+#content.additional:before {
+  background-image: url("http://unsplash.it/1680/1050/?image=459");
+}
+
+/* line 88, stdin */
+.weather {
+  padding-left: 220px;
+  max-width: 350px;
+  height: 400px;
+  margin: 0 auto;
+  position: relative;
+  -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+  -webkit-animation-duration: 1.2s;
+          animation-duration: 1.2s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  visibility: hidden;
+  /* Rectangle 2: */
+}
+
+/* line 101, stdin */
+.unloaded .weather,
+.initial .weather {
+  visibility: hidden;
+}
+
+/* line 105, stdin */
+.loaded .weather {
+  visibility: visible;
+  -webkit-animation-name: fadeInDown;
+          animation-name: fadeInDown;
+}
+
+/* line 110, stdin */
+.weather__temp-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  height: 100%;
+  width: 220px;
+  background-size: cover;
+  box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  overflow: hidden;
+}
+
+/* line 127, stdin */
+.weather__temp {
+  margin: 0;
+  padding: 1px;
+  font-weight: 300;
+  font-size: 80px;
+  line-height: 110px;
+  position: relative;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+/* line 136, stdin */
+.loaded .weather__temp {
+  -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+  -webkit-animation-name: fadeIn;
+          animation-name: fadeIn;
+}
+
+/* line 142, stdin */
+.weather__temp-measure-indicator {
+  vertical-align: 29px;
+  font-size: 40px;
+}
+
+/* line 147, stdin */
+.weather__location {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+}
+
+/* line 153, stdin */
+.loaded .weather__location {
+  -webkit-animation-delay: .4s;
+          animation-delay: .4s;
+  -webkit-animation-name: fadeIn;
+          animation-name: fadeIn;
+}
+
+/* line 161, stdin */
+.thunderstorm .weather__temp-container {
+  background-color: #3B4950;
+  background-image: url("http://unsplash.it/1680/1050/?image=171");
+}
+
+/* line 165, stdin */
+.thunderstorm .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.thunderstorm .weather__detail:nth-of-type(1) {
+  background-color: rgba(61, 76, 83, 0.8);
+}
+
+/* line 172, stdin */
+.thunderstorm .weather__detail:nth-of-type(2) {
+  background-color: rgba(81, 100, 109, 0.8);
+}
+
+/* line 172, stdin */
+.thunderstorm .weather__detail:nth-of-type(3) {
+  background-color: rgba(100, 124, 136, 0.8);
+}
+
+/* line 172, stdin */
+.thunderstorm .weather__detail:nth-of-type(4) {
+  background-color: rgba(124, 147, 158, 0.8);
+}
+
+/* line 161, stdin */
+.drizzle .weather__temp-container {
+  background-color: #712E07;
+  background-image: url("http://unsplash.it/1680/1050/?image=553");
+}
+
+/* line 165, stdin */
+.drizzle .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.drizzle .weather__detail:nth-of-type(1) {
+  background-color: rgba(118, 48, 7, 0.8);
+}
+
+/* line 172, stdin */
+.drizzle .weather__detail:nth-of-type(2) {
+  background-color: rgba(161, 66, 10, 0.8);
+}
+
+/* line 172, stdin */
+.drizzle .weather__detail:nth-of-type(3) {
+  background-color: rgba(204, 83, 13, 0.8);
+}
+
+/* line 172, stdin */
+.drizzle .weather__detail:nth-of-type(4) {
+  background-color: rgba(241, 103, 22, 0.8);
+}
+
+/* line 161, stdin */
+.rain .weather__temp-container {
+  background-color: #87897C;
+  background-image: url("http://unsplash.it/1680/1050/?image=178");
+}
+
+/* line 165, stdin */
+.rain .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.rain .weather__detail:nth-of-type(1) {
+  background-color: rgba(137, 139, 127, 0.8);
+}
+
+/* line 172, stdin */
+.rain .weather__detail:nth-of-type(2) {
+  background-color: rgba(160, 161, 151, 0.8);
+}
+
+/* line 172, stdin */
+.rain .weather__detail:nth-of-type(3) {
+  background-color: rgba(182, 183, 175, 0.8);
+}
+
+/* line 172, stdin */
+.rain .weather__detail:nth-of-type(4) {
+  background-color: rgba(204, 205, 199, 0.8);
+}
+
+/* line 161, stdin */
+.snow .weather__temp-container {
+  background-color: #9CAAAF;
+  background-image: url("http://unsplash.it/1680/1050/?image=730");
+}
+
+/* line 165, stdin */
+.snow .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.snow .weather__detail:nth-of-type(1) {
+  background-color: rgba(159, 172, 177, 0.8);
+}
+
+/* line 172, stdin */
+.snow .weather__detail:nth-of-type(2) {
+  background-color: rgba(184, 194, 198, 0.8);
+}
+
+/* line 172, stdin */
+.snow .weather__detail:nth-of-type(3) {
+  background-color: rgba(210, 216, 218, 0.8);
+}
+
+/* line 172, stdin */
+.snow .weather__detail:nth-of-type(4) {
+  background-color: rgba(235, 238, 239, 0.8);
+}
+
+/* line 161, stdin */
+.atmosphere .weather__temp-container {
+  background-color: #597577;
+  background-image: url("http://unsplash.it/1680/1050/?image=227");
+}
+
+/* line 165, stdin */
+.atmosphere .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.atmosphere .weather__detail:nth-of-type(1) {
+  background-color: rgba(91, 120, 122, 0.8);
+}
+
+/* line 172, stdin */
+.atmosphere .weather__detail:nth-of-type(2) {
+  background-color: rgba(111, 145, 148, 0.8);
+}
+
+/* line 172, stdin */
+.atmosphere .weather__detail:nth-of-type(3) {
+  background-color: rgba(138, 165, 167, 0.8);
+}
+
+/* line 172, stdin */
+.atmosphere .weather__detail:nth-of-type(4) {
+  background-color: rgba(164, 185, 187, 0.8);
+}
+
+/* line 161, stdin */
+.clear .weather__temp-container {
+  background-color: #235875;
+  background-image: url("http://unsplash.it/1680/1050/?image=792");
+}
+
+/* line 165, stdin */
+.clear .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.clear .weather__detail:nth-of-type(1) {
+  background-color: rgba(36, 91, 121, 0.8);
+}
+
+/* line 172, stdin */
+.clear .weather__detail:nth-of-type(2) {
+  background-color: rgba(47, 118, 156, 0.8);
+}
+
+/* line 172, stdin */
+.clear .weather__detail:nth-of-type(3) {
+  background-color: rgba(57, 144, 192, 0.8);
+}
+
+/* line 172, stdin */
+.clear .weather__detail:nth-of-type(4) {
+  background-color: rgba(89, 164, 205, 0.8);
+}
+
+/* line 161, stdin */
+.clouds .weather__temp-container {
+  background-color: #5F76A0;
+  background-image: url("http://unsplash.it/1680/1050/?image=894");
+}
+
+/* line 165, stdin */
+.clouds .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.clouds .weather__detail:nth-of-type(1) {
+  background-color: rgba(98, 121, 162, 0.8);
+}
+
+/* line 172, stdin */
+.clouds .weather__detail:nth-of-type(2) {
+  background-color: rgba(127, 145, 179, 0.8);
+}
+
+/* line 172, stdin */
+.clouds .weather__detail:nth-of-type(3) {
+  background-color: rgba(156, 170, 196, 0.8);
+}
+
+/* line 172, stdin */
+.clouds .weather__detail:nth-of-type(4) {
+  background-color: rgba(185, 195, 213, 0.8);
+}
+
+/* line 161, stdin */
+.extreme .weather__temp-container {
+  background-color: #112628;
+  background-image: url("http://unsplash.it/1680/1050/?image=536");
+}
+
+/* line 165, stdin */
+.extreme .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.extreme .weather__detail:nth-of-type(1) {
+  background-color: rgba(19, 41, 44, 0.8);
+}
+
+/* line 172, stdin */
+.extreme .weather__detail:nth-of-type(2) {
+  background-color: rgba(32, 72, 76, 0.8);
+}
+
+/* line 172, stdin */
+.extreme .weather__detail:nth-of-type(3) {
+  background-color: rgba(46, 103, 108, 0.8);
+}
+
+/* line 172, stdin */
+.extreme .weather__detail:nth-of-type(4) {
+  background-color: rgba(60, 133, 140, 0.8);
+}
+
+/* line 161, stdin */
+.additional .weather__temp-container {
+  background-color: #AA875B;
+  background-image: url("http://unsplash.it/1680/1050/?image=459");
+}
+
+/* line 165, stdin */
+.additional .weather__detail {
+  color: white;
+}
+
+/* line 172, stdin */
+.additional .weather__detail:nth-of-type(1) {
+  background-color: rgba(172, 137, 94, 0.8);
+}
+
+/* line 172, stdin */
+.additional .weather__detail:nth-of-type(2) {
+  background-color: rgba(187, 160, 125, 0.8);
+}
+
+/* line 172, stdin */
+.additional .weather__detail:nth-of-type(3) {
+  background-color: rgba(203, 182, 155, 0.8);
+}
+
+/* line 172, stdin */
+.additional .weather__detail:nth-of-type(4) {
+  background-color: rgba(219, 204, 185, 0.8);
+}
+
+/* line 182, stdin */
+.weather__details-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+}
+
+/* line 190, stdin */
+.weather__detail {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  -webkit-animation-timing-function: ease-in-out;
+          animation-timing-function: ease-in-out;
+  z-index: 50;
+  box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
+}
+
+/* line 200, stdin */
+.loaded .weather__detail {
+  -webkit-animation-name: fadeInLeft;
+          animation-name: fadeInLeft;
+}
+
+/* line 203, stdin */
+.weather__detail:first-of-type {
+  border-top-right-radius: 7px;
+}
+
+/* line 206, stdin */
+.weather__detail:last-of-type {
+  border-bottom-right-radius: 7px;
+}
+
+/* line 212, stdin */
+.loaded .weather__detail:nth-of-type(1) {
+  -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+  z-index: 99;
+}
+
+/* line 212, stdin */
+.loaded .weather__detail:nth-of-type(2) {
+  -webkit-animation-delay: 1.3s;
+          animation-delay: 1.3s;
+  z-index: 98;
+}
+
+/* line 212, stdin */
+.loaded .weather__detail:nth-of-type(3) {
+  -webkit-animation-delay: 1.4s;
+          animation-delay: 1.4s;
+  z-index: 97;
+}
+
+/* line 212, stdin */
+.loaded .weather__detail:nth-of-type(4) {
+  -webkit-animation-delay: 1.5s;
+          animation-delay: 1.5s;
+  z-index: 96;
+}
+
+/* line 222, stdin */
+.weather__detail-icon {
+  font-size: 25px;
+  line-height: 25px;
+  padding: 17px 0 0 0;
+}
+
+/* line 227, stdin */
+.weather__detail-description {
+  font-size: 12px;
+  font-weight: 700;
+  margin: 10px 0 0 0;
+}
+
+/* line 233, stdin */
+.weather__type-toggle-container {
+  width: 60px;
+  height: 52px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 10px;
+}
+
+/* line 241, stdin */
+.weather__type-toggle {
+  display: block;
+  position: relative;
+  width: 60px;
+  height: 52px;
+}
+
+/* line 246, stdin */
+.weather__type-toggle:before, .weather__type-toggle:after {
+  position: absolute;
+  font-size: 11px;
+  left: 0;
+  text-align: center;
+  font-weight: 400;
+  display: block;
+  width: 60px;
+  height: 26px;
+  line-height: 25px;
+  z-index: 150;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.32);
+}
+
+/* line 261, stdin */
+.weather__type-toggle:before {
+  content: 'Metric';
+  top: 0;
+}
+
+/* line 265, stdin */
+.weather__type-toggle:after {
+  content: 'Imperial';
+  bottom: 0;
+}
+
+/* line 270, stdin */
+.weather__type-toggle-label {
+  display: block;
+  position: absolute;
+  width: 54px;
+  height: 24px;
+  left: 3px;
+  top: 3px;
+  z-index: 200;
+  transition: all .3s ease-in-out;
+  border-radius: 8px;
+}
+
+/* line 281, stdin */
+.weather__type-toggle-input {
+  display: none;
+}
+
+/* line 283, stdin */
+.weather__type-toggle-input:checked + label {
+  top: 25px;
+}
+
+/* line 291, stdin */
+.thunderstorm .weather__type-toggle-container {
+  background-color: rgba(81, 100, 109, 0.75);
+}
+
+/* line 298, stdin */
+.thunderstorm .weather__type-toggle-label {
+  background-color: #3B4950;
+}
+
+/* line 291, stdin */
+.drizzle .weather__type-toggle-container {
+  background-color: rgba(161, 66, 10, 0.75);
+}
+
+/* line 298, stdin */
+.drizzle .weather__type-toggle-label {
+  background-color: #712E07;
+}
+
+/* line 291, stdin */
+.rain .weather__type-toggle-container {
+  background-color: rgba(160, 161, 151, 0.75);
+}
+
+/* line 298, stdin */
+.rain .weather__type-toggle-label {
+  background-color: #87897C;
+}
+
+/* line 291, stdin */
+.snow .weather__type-toggle-container {
+  background-color: rgba(184, 194, 198, 0.75);
+}
+
+/* line 298, stdin */
+.snow .weather__type-toggle-label {
+  background-color: #9CAAAF;
+}
+
+/* line 291, stdin */
+.atmosphere .weather__type-toggle-container {
+  background-color: rgba(111, 145, 148, 0.75);
+}
+
+/* line 298, stdin */
+.atmosphere .weather__type-toggle-label {
+  background-color: #597577;
+}
+
+/* line 291, stdin */
+.clear .weather__type-toggle-container {
+  background-color: rgba(47, 118, 156, 0.75);
+}
+
+/* line 298, stdin */
+.clear .weather__type-toggle-label {
+  background-color: #235875;
+}
+
+/* line 291, stdin */
+.clouds .weather__type-toggle-container {
+  background-color: rgba(127, 145, 179, 0.75);
+}
+
+/* line 298, stdin */
+.clouds .weather__type-toggle-label {
+  background-color: #5F76A0;
+}
+
+/* line 291, stdin */
+.extreme .weather__type-toggle-container {
+  background-color: rgba(32, 72, 76, 0.75);
+}
+
+/* line 298, stdin */
+.extreme .weather__type-toggle-label {
+  background-color: #112628;
+}
+
+/* line 291, stdin */
+.additional .weather__type-toggle-container {
+  background-color: rgba(187, 160, 125, 0.75);
+}
+
+/* line 298, stdin */
+.additional .weather__type-toggle-label {
+  background-color: #AA875B;
+}
+
+/* line 304, stdin */
+.weather__form {
+  position: relative;
+  font-size: 15px;
+  background-color: rgba(0, 0, 0, 0.29);
+  border-radius: 5px;
+}
+
+/* line 310, stdin */
+.weather__form-input {
+  border: none;
+  color: white;
+  padding: 10px 5px 10px 10px;
+  display: block;
+  background-color: transparent;
+  margin-right: 90px;
+  width: 100%;
+}
+
+/* line 319, stdin */
+.weather__form-submit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 50px;
+  color: white;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+/* line 341, stdin */
+.loading-icon {
+  width: 40px;
+  -webkit-animation: spin 2s infinite linear;
+          animation: spin 2s infinite linear;
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+
+/* line 345, stdin */
+.loading-icon path {
+  fill: white;
+}
+
+/* line 350, stdin */
+.message {
+  margin: 0 auto;
+  max-width: 300px;
+  text-align: center;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  font-size: 25px;
+  font-weight: 300;
+  text-shadow: 1px 1px 2px black;
+  position: relative;
+  z-index: 10;
+}
+
+/* line 363, stdin */
+.message__error {
+  font-size: 13px;
+  color: #D86161;
+  text-shadow: none;
+  margin: 5px 0;
+  font-weight: 700;
+}
+
+/* line 370, stdin */
+.message__instructions {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media screen and (min-width: 350px) {
+  /* line 376, stdin */
+  #content {
+    padding: 1px;
+  }
+  /* line 379, stdin */
+  .weather {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-left: 260px;
+  }
+  /* line 383, stdin */
+  .weather__temp-container {
+    width: 260px;
+  }
+}
